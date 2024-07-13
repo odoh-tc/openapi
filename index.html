@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      API documentation for notification, payment transactions, invite, and
+      activity log
+    </title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&display=swap"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #redoc-container {
+        padding: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="redoc-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+    <script>
+      Redoc.init(
+        "openapi.yaml",
+        {
+          scrollYOffset: 50,
+        },
+        document.getElementById("redoc-container")
+      );
+    </script>
+  </body>
+</html>

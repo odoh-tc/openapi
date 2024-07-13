@@ -1,0 +1,414 @@
+openapi: 3.0.0
+info:
+  title: Notification, Payment Transactions, Invite, and Activity Log API
+  description: API documentation for notification, payment transactions, invite, and activity log.
+  version: 1.0.0
+servers:
+  - url: https://localhost:8000
+    description: Main API server
+paths:
+  /notifications:
+    get:
+      summary: Get all notifications
+      tags:
+        - Notifications
+      responses:
+        "200":
+          description: A list of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+    post:
+      summary: Create a new notification
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "201":
+          description: Notification created
+  /notifications/{id}:
+    get:
+      summary: Get a notification by ID
+      tags:
+        - Notifications
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Notification ID
+      responses:
+        "200":
+          description: Notification details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+    put:
+      summary: Update a notification by ID
+      tags:
+        - Notifications
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Notification ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "200":
+          description: Notification updated
+    delete:
+      summary: Delete a notification by ID
+      tags:
+        - Notifications
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Notification ID
+      responses:
+        "204":
+          description: Notification deleted
+  /payment_transactions:
+    get:
+      summary: Get all payment transactions
+      tags:
+        - Payment Transactions
+      responses:
+        "200":
+          description: A list of payment transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PaymentTransaction"
+    post:
+      summary: Create a new payment transaction
+      tags:
+        - Payment Transactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentTransaction"
+      responses:
+        "201":
+          description: Payment transaction created
+  /payment_transactions/{id}:
+    get:
+      summary: Get a payment transaction by ID
+      tags:
+        - Payment Transactions
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Payment Transaction ID
+      responses:
+        "200":
+          description: Payment transaction details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentTransaction"
+    put:
+      summary: Update a payment transaction by ID
+      tags:
+        - Payment Transactions
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Payment Transaction ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentTransaction"
+      responses:
+        "200":
+          description: Payment transaction updated
+    delete:
+      summary: Delete a payment transaction by ID
+      tags:
+        - Payment Transactions
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Payment Transaction ID
+      responses:
+        "204":
+          description: Payment transaction deleted
+  /invites:
+    get:
+      summary: Get all invites
+      tags:
+        - Invites
+      responses:
+        "200":
+          description: A list of invites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Invite"
+    post:
+      summary: Create a new invite
+      tags:
+        - Invites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Invite"
+      responses:
+        "201":
+          description: Invite created
+  /invites/{id}:
+    get:
+      summary: Get an invite by ID
+      tags:
+        - Invites
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Invite ID
+      responses:
+        "200":
+          description: Invite details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invite"
+    put:
+      summary: Update an invite by ID
+      tags:
+        - Invites
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Invite ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Invite"
+      responses:
+        "200":
+          description: Invite updated
+    delete:
+      summary: Delete an invite by ID
+      tags:
+        - Invites
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Invite ID
+      responses:
+        "204":
+          description: Invite deleted
+  /activity_logs:
+    get:
+      summary: Get all activity logs
+      tags:
+        - Activity Logs
+      responses:
+        "200":
+          description: A list of activity logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityLog"
+    post:
+      summary: Create a new activity log
+      tags:
+        - Activity Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivityLog"
+      responses:
+        "201":
+          description: Activity log created
+  /activity_logs/{id}:
+    get:
+      summary: Get an activity log by ID
+      tags:
+        - Activity Logs
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Activity Log ID
+      responses:
+        "200":
+          description: Activity log details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivityLog"
+    put:
+      summary: Update an activity log by ID
+      tags:
+        - Activity Logs
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Activity Log ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActivityLog"
+      responses:
+        "200":
+          description: Activity log updated
+    delete:
+      summary: Delete an activity log by ID
+      tags:
+        - Activity Logs
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Activity Log ID
+      responses:
+        "204":
+          description: Activity log deleted
+
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        message:
+          type: string
+        notification_type:
+          type: string
+        is_read:
+          type: boolean
+        read_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        link:
+          type: string
+    PaymentTransaction:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        transaction_id:
+          type: string
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        payment_gateway:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Invite:
+      type: object
+      properties:
+        id:
+          type: integer
+        inviter_id:
+          type: integer
+        invitee_email:
+          type: string
+        invite_code:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ActivityLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        action:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
