@@ -1,153 +1,33 @@
 openapi: 3.0.0
 info:
-  title: Users, User Profile, Organization, User-organization, Notification, Payment Transactions, Invite, and Activity Log API
-  description: API documentation for Users, User Profile, Organization, User-organization, Notification, Payment Transactions, Invite, and Activity Log.
+  title: Users, Profiles, Organisations, Blogs, Notification, Payment Transactions, Invite, and Activity Log API
+  description: API Documentation for Users, Profiles, Organisations, Blogs, Notification, Payment Transactions, Invite, and Activity Log.
   version: 1.0.0
+
+tags:
+  - name: user
+    description: Operations related to users and profiles
+  - name: organisation
+    description: Operations related to organisations and users within organisations
+  - name: blog
+    description: Operations related to blog posts and comments
+  - name: Notifications
+    description: Operations related to notifications
+  - name: Payment Transactions
+    description: Operations related to payment transactions
+  - name: Invites
+    description: Operations related to invites
+  - name: Activity Logs
+    description: Operations related to activity logs
 servers:
   - url: https://localhost:8000
     description: Main API server
 paths:
-  /register:
-    post:
-      summary: Register a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterRequest"
-      responses:
-        "201":
-          description: User registered successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /login:
-    post:
-      summary: Login a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginRequest"
-      responses:
-        "200":
-          description: User logged in successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/LoginResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /refresh-access-token:
-    post:
-      summary: Refresh access token
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RefreshTokenRequest"
-      responses:
-        "200":
-          description: Access token refreshed successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TokenResponse"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /logout:
-    post:
-      summary: Logout a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LogoutRequest"
-      responses:
-        "200":
-          description: User logged out successfully
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
   /users:
     get:
-      summary: List all users
-      security:
-        - bearerAuth: []
+      summary: Retrieve all users
+      tags:
+        - user
       responses:
         "200":
           description: A list of users
@@ -158,232 +38,109 @@ paths:
                 items:
                   $ref: "#/components/schemas/User"
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
+
     post:
       summary: Create a new user
-      security:
-        - bearerAuth: []
+      tags:
+        - user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserInput"
       responses:
         "201":
-          description: User created
+          description: User created successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
         "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
+          description: Invalid input, e.g., missing required fields
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
 
-  /users/{id}:
+  /users/{userId}:
     get:
-      summary: Get a user by ID
-      security:
-        - bearerAuth: []
+      summary: Retrieve a specific user by ID
+      tags:
+        - user
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: A single user
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: User not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-    put:
-      summary: Update a user by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        "200":
-          description: User updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "404":
-          description: User not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-    delete:
-      summary: Delete a user by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: User deleted
-        "404":
-          description: User not found
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /user_profiles:
-    get:
-      summary: List all user profiles
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: A list of user profiles
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/UserProfile"
-
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-    post:
-      summary: Create a new user profile
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UserProfile"
-      responses:
-        "201":
-          description: User profile created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserProfile"
-
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /user_profiles/{id}:
-    get:
-      summary: Get a user profile by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
+        - in: path
+          name: userId
           required: true
           schema:
             type: integer
       responses:
         "200":
-          description: A single user profile
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
+
+    put:
+      summary: Update a user
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "204":
+          description: User updated successfully
+        "400":
+          description: Invalid input, e.g., invalid fields provided
+        "404":
+          description: User not found
+        "500":
+          description: Internal server error
+
+  /users/{userId}/profile:
+    get:
+      summary: Retrieve user profile
+      tags:
+        - user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: User profile found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/UserProfile"
         "404":
           description: User profile not found
-
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
+
     put:
-      summary: Update a user profile by ID
-      security:
-        - bearerAuth: []
+      summary: Update user profile
+      tags:
+        - user
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: userId
           required: true
           schema:
             type: integer
@@ -392,147 +149,134 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserProfile"
-      responses:
-        "200":
-          description: User profile updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UserProfile"
-
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-    delete:
-      summary: Delete a user profile by ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+              $ref: "#/components/schemas/UserProfileInput"
       responses:
         "204":
-          description: User profile deleted
-
+          description: User profile updated successfully
+        "400":
+          description: Invalid input, e.g., invalid fields provided
         "404":
           description: User profile not found
-
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
 
-  /organization_profiles:
+  /organisations/{orgId}/profile:
     get:
-      summary: List all organization profiles
-      security:
-        - bearerAuth: []
-      responses:
-        "200":
-          description: A list of organization profiles
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/OrganizationProfile"
-
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-    post:
-      summary: Create a new organization profile
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/OrganizationProfile"
-      responses:
-        "201":
-          description: Organization profile created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrganizationProfile"
-
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /organization_profiles/{id}:
-    get:
-      summary: Get an organization profile by ID
-      security:
-        - bearerAuth: []
+      summary: Retrieve organisation profile
+      tags:
+        - organisation
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: orgId
           required: true
           schema:
             type: integer
       responses:
         "200":
-          description: A single organization profile
+          description: Organisation profile found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrganizationProfile"
+                $ref: "#/components/schemas/OrganisationProfile"
         "404":
-          description: Organization profile not found
-
+          description: Organisation profile not found
         "500":
-          description: Internal Server Error
+          description: Internal server error
+
+  /organisations/{orgId}/users:
+    get:
+      summary: Retrieve users belonging to an organisation
+      tags:
+        - organisation
+      parameters:
+        - in: path
+          name: orgId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of users in the organisation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          description: Organisation not found
+        "500":
+          description: Internal server error
+
+  /blog/posts:
+    get:
+      summary: Retrieve all blog posts
+      tags:
+        - blog
+      responses:
+        "200":
+          description: A list of blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BlogPost"
+        "500":
+          description: Internal server error
+
+    post:
+      summary: Create a new blog post
+      tags:
+        - blog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogPostInput"
+      responses:
+        "201":
+          description: Blog post created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "400":
+          description: Invalid input, e.g., missing required fields
+        "500":
+          description: Internal server error
+
+  /blog/posts/{postId}:
+    get:
+      summary: Retrieve a specific blog post by ID
+      tags:
+        - blog
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Blog post found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogPost"
+        "404":
+          description: Blog post not found
+        "500":
+          description: Internal server error
 
     put:
-      summary: Update an organization profile by ID
-      security:
-        - bearerAuth: []
+      summary: Update a blog post
+      tags:
+        - blog
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: postId
           required: true
           schema:
             type: integer
@@ -541,177 +285,71 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrganizationProfile"
+              $ref: "#/components/schemas/BlogPostInput"
       responses:
-        "200":
-          description: Organization profile updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrganizationProfile"
-        "404":
-          description: Organization profile not found
-
+        "204":
+          description: Blog post updated successfully
         "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-
+          description: Invalid input, e.g., invalid fields provided
+        "404":
+          description: Blog post not found
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
 
-    delete:
-      summary: Delete an organization profile by ID
-      security:
-        - bearerAuth: []
+  /blog/posts/{postId}/comments:
+    get:
+      summary: Retrieve comments for a specific blog post
+      tags:
+        - blog
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: postId
           required: true
           schema:
             type: integer
       responses:
-        "204":
-          description: Organization profile deleted
-
-        "404":
-          description: Organization profile not found
-
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /organization_users:
-    get:
-      summary: List all user-organization relationships
-      security:
-        - bearerAuth: []
-      responses:
         "200":
-          description: A list of user-organization relationships
+          description: List of comments for the blog post
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/OrganizationUser"
-
+                  $ref: "#/components/schemas/BlogComment"
+        "404":
+          description: Blog post not found
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
 
     post:
-      summary: Create a new user-organization relationship
-      security:
-        - bearerAuth: []
+      summary: Create a new comment for a blog post
+      tags:
+        - blog
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrganizationUser"
+              $ref: "#/components/schemas/BlogCommentInput"
       responses:
         "201":
-          description: User-organization relationship created
+          description: Blog comment created successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrganizationUser"
-
-        "422":
-          description: Unprocessable Entity
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UnprocessableEntityResponse"
-
+                $ref: "#/components/schemas/BlogComment"
         "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BadRequestErrorResponse"
-
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-  /organization_users/{user_id}/{organization_id}:
-    get:
-      summary: Get a user-organization relationship by user ID and organization ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: organization_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: A single user-organization relationship
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrganizationUser"
+          description: Invalid input, e.g., missing required fields
         "404":
-          description: User or User-organization relationship not found
-
+          description: Blog post not found
         "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
-
-    delete:
-      summary: Delete a user-organization relationship by user ID and organization ID
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: user_id
-          in: path
-          required: true
-          schema:
-            type: integer
-        - name: organization_id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "204":
-          description: User-organization relationship deleted
-
-        "404":
-          description: User-organization relationship not found
-
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InternalServerErrorResponse"
+          description: Internal server error
   /notifications:
     get:
       summary: Get all notifications
@@ -1138,215 +776,158 @@ components:
       bearerFormat: JWT
 
   schemas:
-    RegisterRequest:
-      type: object
-      required:
-        - firstName
-        - lastName
-        - email
-        - password
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-
-    LoginRequest:
-      type: object
-      required:
-        - email
-        - password
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-
-    RefreshTokenRequest:
-      type: object
-      required:
-        - refresh_token
-      properties:
-        refresh_token:
-          type: string
-
-    LogoutRequest:
-      type: object
-      required:
-        - refresh_token
-      properties:
-        refresh_token:
-          type: string
-
     User:
       type: object
-      required:
-        - email
       properties:
         id:
-          type: string
-          example: "1"
-        email:
-          type: string
-          example: "Kraze@example.com"
+          type: integer
         username:
           type: string
-          example: "Kraze"
+        email:
+          type: string
+        is_active:
+          type: boolean
+        is_admin:
+          type: boolean
         created_at:
           type: string
           format: date-time
-          example: "2023-07-13T00:00:00Z"
         updated_at:
           type: string
           format: date-time
-          example: "2023-07-13T00:00:00Z"
-        isActive:
+
+    UserInput:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        is_active:
           type: boolean
-          example: true
-        is_superadmin:
+        is_admin:
           type: boolean
-          example: false
 
     UserProfile:
       type: object
-      required:
-        - user_id
-        - full_name
-        - created_at
-        - updated_at
       properties:
         id:
           type: integer
-          example: 1
         user_id:
           type: integer
-          example: 1
         full_name:
           type: string
-          example: "John Doe"
         avatar_url:
           type: string
-          example: "http://example.com/avatar.jpg"
         bio:
           type: string
-          example: "A short bio about the user."
         created_at:
           type: string
           format: date-time
-          example: "2024-01-01T12:00:00Z"
         updated_at:
           type: string
           format: date-time
-          example: "2024-01-02T12:00:00Z"
 
-    OrganizationProfile:
+    UserProfileInput:
       type: object
-      required:
-        - name
-        - created_at
-        - updated_at
+      properties:
+        full_name:
+          type: string
+        avatar_url:
+          type: string
+        bio:
+          type: string
+
+    OrganisationProfile:
+      type: object
       properties:
         id:
           type: integer
-          example: 1
         name:
           type: string
-          example: "Example Organization"
         logo_url:
           type: string
-          example: "http://example.com/logo.jpg"
         description:
           type: string
-          example: "A description of the organization."
         created_at:
           type: string
           format: date-time
-          example: "2024-01-01T12:00:00Z"
         updated_at:
           type: string
           format: date-time
-          example: "2024-01-02T12:00:00Z"
 
-    OrganizationUser:
-      type: object
-      required:
-        - user_id
-        - organization_id
-        - created_at
-        - updated_at
-      properties:
-        user_id:
-          type: integer
-          example: 1
-        organization_id:
-          type: integer
-          example: 1
-        created_at:
-          type: string
-          format: date-time
-          example: "2024-01-01T12:00:00Z"
-        updated_at:
-          type: string
-          format: date-time
-          example: "2024-01-02T12:00:00Z"
-
-    UserResponse:
+    BlogPost:
       type: object
       properties:
         id:
+          type: integer
+        title:
           type: string
-        username:
+        content:
           type: string
-        email:
+        author_id:
+          type: integer
+        created_at:
           type: string
-        date_created:
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        published_at:
+          type: string
+          format: date-time
+        is_published:
+          type: boolean
+        image_url:
+          type: string
+        slug:
           type: string
 
-    LoginResponse:
+    BlogPostInput:
       type: object
       properties:
-        access_token:
+        title:
           type: string
-        refresh_token:
+        content:
+          type: string
+        author_id:
+          type: integer
+        image_url:
+          type: string
+        slug:
           type: string
 
-    TokenResponse:
+    BlogComment:
       type: object
       properties:
-        access_token:
+        id:
+          type: integer
+        post_id:
+          type: integer
+        user_id:
+          type: integer
+        content:
           type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        is_approved:
+          type: boolean
 
-    InternalServerErrorResponse:
+    BlogCommentInput:
       type: object
       properties:
-        error:
+        post_id:
+          type: integer
+        user_id:
+          type: integer
+        content:
           type: string
-          example: "Internal server error"
-
-    BadRequestErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Bad request"
-
-    PageNotFoundErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Page not found"
-
-    UnprocessableEntityResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Empty fields found."
     Notification:
       type: object
       properties:
