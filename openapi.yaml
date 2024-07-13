@@ -6,11 +6,17 @@ info:
 
 tags:
   - name: user
-    description: Operations related to users and profiles
-  - name: organisation
-    description: Operations related to organisations and users within organisations
-  - name: blog
-    description: Operations related to blog posts and comments
+    description: Operations related to users
+  - name: user_profile
+    description: Operations related to user profiles
+  - name: organisation_profile
+    description: Operations related to organisation profiles
+  - name: organisation_user
+    description: Operations related to organisation
+  - name: blog_post
+    description: Operations related to blog posts
+  - name: blog_comment
+    description: Operations related to blog comments
   - name: Notifications
     description: Operations related to notifications
   - name: Payment Transactions
@@ -19,6 +25,8 @@ tags:
     description: Operations related to invites
   - name: Activity Logs
     description: Operations related to activity logs
+  - name: email_message
+    description: Operations related to email messages
 servers:
   - url: https://localhost:8000
     description: Main API server
@@ -111,14 +119,53 @@ paths:
         "500":
           description: Internal server error
 
-  /users/{userId}/profile:
+  /user_profiles:
     get:
-      summary: Retrieve user profile
+      summary: Retrieve all user profiles
       tags:
-        - user
+        - user_profile
+      responses:
+        "200":
+          description: A list of user profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserProfile"
+        "500":
+          description: Internal server error
+
+    post:
+      summary: Create a new user profile
+      tags:
+        - user_profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileInput"
+      responses:
+        "201":
+          description: User profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          description: Invalid input, e.g., missing required fields
+        "500":
+          description: Internal server error
+
+  /user_profiles/{profileId}:
+    get:
+      summary: Retrieve a specific user profile by ID
+      tags:
+        - user_profile
       parameters:
         - in: path
-          name: userId
+          name: profileId
           required: true
           schema:
             type: integer
@@ -135,12 +182,12 @@ paths:
           description: Internal server error
 
     put:
-      summary: Update user profile
+      summary: Update a user profile
       tags:
-        - user
+        - user_profile
       parameters:
         - in: path
-          name: userId
+          name: profileId
           required: true
           schema:
             type: integer
@@ -160,14 +207,53 @@ paths:
         "500":
           description: Internal server error
 
-  /organisations/{orgId}/profile:
+  /organisation_profiles:
     get:
-      summary: Retrieve organisation profile
+      summary: Retrieve all organisation profiles
       tags:
-        - organisation
+        - organisation_profile
+      responses:
+        "200":
+          description: A list of organisation profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OrganisationProfile"
+        "500":
+          description: Internal server error
+
+    post:
+      summary: Create a new organisation profile
+      tags:
+        - organisation_profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganisationProfileInput"
+      responses:
+        "201":
+          description: Organisation profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganisationProfile"
+        "400":
+          description: Invalid input, e.g., missing required fields
+        "500":
+          description: Internal server error
+
+  /organisation_profiles/{profileId}:
+    get:
+      summary: Retrieve a specific organisation profile by ID
+      tags:
+        - organisation_profile
       parameters:
         - in: path
-          name: orgId
+          name: profileId
           required: true
           schema:
             type: integer
@@ -183,36 +269,125 @@ paths:
         "500":
           description: Internal server error
 
-  /organisations/{orgId}/users:
-    get:
-      summary: Retrieve users belonging to an organisation
+    put:
+      summary: Update an organisation profile
       tags:
-        - organisation
+        - organisation_profile
       parameters:
         - in: path
-          name: orgId
+          name: profileId
           required: true
           schema:
             type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganisationProfileInput"
+      responses:
+        "204":
+          description: Organisation profile updated successfully
+        "400":
+          description: Invalid input, e.g., invalid fields provided
+        "404":
+          description: Organisation profile not found
+        "500":
+          description: Internal server error
+
+  /organisation_users:
+    get:
+      summary: Retrieve all organisation users
+      tags:
+        - organisation_user
       responses:
         "200":
-          description: List of users in the organisation
+          description: A list of organisation users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
-        "404":
-          description: Organisation not found
+                  $ref: "#/components/schemas/OrganisationUser"
         "500":
           description: Internal server error
 
-  /blog/posts:
+    post:
+      summary: Add a user to an organisation
+      tags:
+        - organisation_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganisationUserInput"
+      responses:
+        "201":
+          description: User added to organisation successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganisationUser"
+        "400":
+          description: Invalid input, e.g., missing required fields
+        "500":
+          description: Internal server error
+
+  /organisation_users/{userId}:
+    get:
+      summary: Retrieve a specific organisation user by ID
+      tags:
+        - organisation_user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Organisation user found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrganisationUser"
+        "404":
+          description: Organisation user not found
+        "500":
+          description: Internal server error
+
+    put:
+      summary: Update an organisation user
+      tags:
+        - organisation_user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrganisationUserInput"
+      responses:
+        "204":
+          description: Organisation user updated successfully
+        "400":
+          description: Invalid input, e.g., invalid fields provided
+        "404":
+          description: Organisation user not found
+        "500":
+          description: Internal server error
+
+  /blog_posts:
     get:
       summary: Retrieve all blog posts
       tags:
-        - blog
+        - blog_post
       responses:
         "200":
           description: A list of blog posts
@@ -228,7 +403,7 @@ paths:
     post:
       summary: Create a new blog post
       tags:
-        - blog
+        - blog_post
       requestBody:
         required: true
         content:
@@ -247,11 +422,11 @@ paths:
         "500":
           description: Internal server error
 
-  /blog/posts/{postId}:
+  /blog_posts/{postId}:
     get:
       summary: Retrieve a specific blog post by ID
       tags:
-        - blog
+        - blog_post
       parameters:
         - in: path
           name: postId
@@ -273,7 +448,7 @@ paths:
     put:
       summary: Update a blog post
       tags:
-        - blog
+        - blog_post
       parameters:
         - in: path
           name: postId
@@ -296,38 +471,75 @@ paths:
         "500":
           description: Internal server error
 
-  /blog/posts/{postId}/comments:
+  /blog_comments:
     get:
-      summary: Retrieve comments for a specific blog post
+      summary: Retrieve all blog comments
       tags:
-        - blog
-      parameters:
-        - in: path
-          name: postId
-          required: true
-          schema:
-            type: integer
+        - blog_comment
       responses:
         "200":
-          description: List of comments for the blog post
+          description: A list of blog comments
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/BlogComment"
-        "404":
-          description: Blog post not found
         "500":
           description: Internal server error
 
     post:
-      summary: Create a new comment for a blog post
+      summary: Add a comment to a blog post
       tags:
-        - blog
+        - blog_comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogCommentInput"
+      responses:
+        "201":
+          description: Comment added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogComment"
+        "400":
+          description: Invalid input, e.g., missing required fields
+        "500":
+          description: Internal server error
+
+  /blog_comments/{commentId}:
+    get:
+      summary: Retrieve a specific blog comment by ID
+      tags:
+        - blog_comment
       parameters:
         - in: path
-          name: postId
+          name: commentId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Blog comment found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BlogComment"
+        "404":
+          description: Blog comment not found
+        "500":
+          description: Internal server error
+
+    put:
+      summary: Update a blog comment
+      tags:
+        - blog_comment
+      parameters:
+        - in: path
+          name: commentId
           required: true
           schema:
             type: integer
@@ -338,16 +550,12 @@ paths:
             schema:
               $ref: "#/components/schemas/BlogCommentInput"
       responses:
-        "201":
-          description: Blog comment created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/BlogComment"
+        "204":
+          description: Blog comment updated successfully
         "400":
-          description: Invalid input, e.g., missing required fields
+          description: Invalid input, e.g., invalid fields provided
         "404":
-          description: Blog post not found
+          description: Blog comment not found
         "500":
           description: Internal server error
   /notifications:
@@ -558,6 +766,68 @@ paths:
           description: Payment transaction not found
         "500":
           description: Internal Server Error
+
+  /email_messages:
+    get:
+      summary: Retrieve all email messages
+      tags:
+        - email_message
+      responses:
+        "200":
+          description: A list of email messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmailMessage"
+        "500":
+          description: Internal server error
+
+    post:
+      summary: Send an email message
+      tags:
+        - email_message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmailMessageInput"
+      responses:
+        "201":
+          description: Email message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmailMessage"
+        "400":
+          description: Invalid input, e.g., missing required fields
+        "500":
+          description: Internal server error
+
+  /email_messages/{messageId}:
+    get:
+      summary: Retrieve a specific email message by ID
+      tags:
+        - email_message
+      parameters:
+        - in: path
+          name: messageId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Email message found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmailMessage"
+        "404":
+          description: Email message not found
+        "500":
+          description: Internal server error
 
   /invites:
     get:
@@ -858,6 +1128,40 @@ components:
           type: string
           format: date-time
 
+    OrganisationProfileInput:
+      type: object
+      properties:
+        name:
+          type: string
+        logo_url:
+          type: string
+        description:
+          type: string
+
+    OrganisationUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        organisation_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    OrganisationUserInput:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        organisation_id:
+          type: integer
+
     BlogPost:
       type: object
       properties:
@@ -894,6 +1198,11 @@ components:
           type: string
         author_id:
           type: integer
+        published_at:
+          type: string
+          format: date-time
+        is_published:
+          type: boolean
         image_url:
           type: string
         slug:
@@ -951,6 +1260,43 @@ components:
         created_at:
           type: string
           format: date-time
+    EmailMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        sender:
+          type: string
+          format: email
+        recipient:
+          type: string
+          format: email
+        subject:
+          type: string
+        body:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        sent_date:
+          type: string
+          format: date-time
+
+    EmailMessageInput:
+      type: object
+      properties:
+        sender:
+          type: string
+          format: email
+        recipient:
+          type: string
+          format: email
+        subject:
+          type: string
+        body:
+          type: string
     Invite:
       type: object
       properties:
