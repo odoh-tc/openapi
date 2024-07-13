@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Notification, Payment Transactions, Invite, and Activity Log API
-  description: API documentation for notification, payment transactions, invite, and activity log.
+  title: Users, User Profile, Organization, User-organization, Notification, Payment Transactions, Invite, and Activity Log API
+  description: API documentation for Users, User Profile, Organization, User-organization, Notification, Payment Transactions, Invite, and Activity Log.
   version: 1.0.0
 servers:
   - url: https://localhost:8000
@@ -920,6 +920,7 @@ paths:
           description: Payment transaction not found
         "500":
           description: Internal Server Error
+
   /invites:
     get:
       summary: Get all invites
@@ -1128,8 +1129,224 @@ paths:
           description: Activity log not found
         "500":
           description: Internal Server Error
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+
+    LogoutRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+        refresh_token:
+          type: string
+
+    User:
+      type: object
+      required:
+        - email
+      properties:
+        id:
+          type: string
+          example: "1"
+        email:
+          type: string
+          example: "Kraze@example.com"
+        username:
+          type: string
+          example: "Kraze"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-07-13T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-07-13T00:00:00Z"
+        isActive:
+          type: boolean
+          example: true
+        is_superadmin:
+          type: boolean
+          example: false
+
+    UserProfile:
+      type: object
+      required:
+        - user_id
+        - full_name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        full_name:
+          type: string
+          example: "John Doe"
+        avatar_url:
+          type: string
+          example: "http://example.com/avatar.jpg"
+        bio:
+          type: string
+          example: "A short bio about the user."
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-02T12:00:00Z"
+
+    OrganizationProfile:
+      type: object
+      required:
+        - name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Example Organization"
+        logo_url:
+          type: string
+          example: "http://example.com/logo.jpg"
+        description:
+          type: string
+          example: "A description of the organization."
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-02T12:00:00Z"
+
+    OrganizationUser:
+      type: object
+      required:
+        - user_id
+        - organization_id
+        - created_at
+        - updated_at
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        organization_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T12:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-02T12:00:00Z"
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        date_created:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+
+    InternalServerErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Internal server error"
+
+    BadRequestErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Bad request"
+
+    PageNotFoundErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Page not found"
+
+    UnprocessableEntityResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Empty fields found."
     Notification:
       type: object
       properties:
