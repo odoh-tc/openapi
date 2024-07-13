@@ -21,6 +21,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Notification"
+        "500":
+          description: Internal Server Error
     post:
       summary: Create a new notification
       tags:
@@ -34,6 +36,12 @@ paths:
       responses:
         "201":
           description: Notification created
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
   /notifications/{id}:
     get:
       summary: Get a notification by ID
@@ -53,6 +61,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Notification"
+        "404":
+          description: Notification not found
+        "500":
+          description: Internal Server Error
     put:
       summary: Update a notification by ID
       tags:
@@ -73,6 +85,14 @@ paths:
       responses:
         "200":
           description: Notification updated
+        "400":
+          description: Bad Request
+        "404":
+          description: Notification not found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
     delete:
       summary: Delete a notification by ID
       tags:
@@ -87,6 +107,10 @@ paths:
       responses:
         "204":
           description: Notification deleted
+        "404":
+          description: Notification not found
+        "500":
+          description: Internal Server Error
   /payment_transactions:
     get:
       summary: Get all payment transactions
@@ -101,6 +125,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/PaymentTransaction"
+        "500":
+          description: Internal Server Error
     post:
       summary: Create a new payment transaction
       tags:
@@ -114,6 +140,12 @@ paths:
       responses:
         "201":
           description: Payment transaction created
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
   /payment_transactions/{id}:
     get:
       summary: Get a payment transaction by ID
@@ -133,6 +165,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PaymentTransaction"
+        "404":
+          description: Payment transaction not found
+        "500":
+          description: Internal Server Error
     put:
       summary: Update a payment transaction by ID
       tags:
@@ -153,6 +189,14 @@ paths:
       responses:
         "200":
           description: Payment transaction updated
+        "400":
+          description: Bad Request
+        "404":
+          description: Payment transaction not found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
     delete:
       summary: Delete a payment transaction by ID
       tags:
@@ -167,6 +211,10 @@ paths:
       responses:
         "204":
           description: Payment transaction deleted
+        "404":
+          description: Payment transaction not found
+        "500":
+          description: Internal Server Error
   /invites:
     get:
       summary: Get all invites
@@ -181,6 +229,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Invite"
+        "500":
+          description: Internal Server Error
     post:
       summary: Create a new invite
       tags:
@@ -194,6 +244,12 @@ paths:
       responses:
         "201":
           description: Invite created
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
   /invites/{id}:
     get:
       summary: Get an invite by ID
@@ -213,6 +269,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Invite"
+        "404":
+          description: Invite not found
+        "500":
+          description: Internal Server Error
     put:
       summary: Update an invite by ID
       tags:
@@ -233,6 +293,14 @@ paths:
       responses:
         "200":
           description: Invite updated
+        "400":
+          description: Bad Request
+        "404":
+          description: Invite not found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
     delete:
       summary: Delete an invite by ID
       tags:
@@ -247,6 +315,10 @@ paths:
       responses:
         "204":
           description: Invite deleted
+        "404":
+          description: Invite not found
+        "500":
+          description: Internal Server Error
   /activity_logs:
     get:
       summary: Get all activity logs
@@ -261,6 +333,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ActivityLog"
+        "500":
+          description: Internal Server Error
     post:
       summary: Create a new activity log
       tags:
@@ -274,6 +348,12 @@ paths:
       responses:
         "201":
           description: Activity log created
+        "400":
+          description: Bad Request
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
   /activity_logs/{id}:
     get:
       summary: Get an activity log by ID
@@ -293,6 +373,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ActivityLog"
+        "404":
+          description: Activity log not found
+        "500":
+          description: Internal Server Error
     put:
       summary: Update an activity log by ID
       tags:
@@ -313,6 +397,14 @@ paths:
       responses:
         "200":
           description: Activity log updated
+        "400":
+          description: Bad Request
+        "404":
+          description: Activity log not found
+        "422":
+          description: Unprocessable Entity
+        "500":
+          description: Internal Server Error
     delete:
       summary: Delete an activity log by ID
       tags:
@@ -327,7 +419,10 @@ paths:
       responses:
         "204":
           description: Activity log deleted
-
+        "404":
+          description: Activity log not found
+        "500":
+          description: Internal Server Error
 components:
   schemas:
     Notification:
@@ -335,47 +430,22 @@ components:
       properties:
         id:
           type: integer
-        user_id:
-          type: integer
         message:
           type: string
-        notification_type:
-          type: string
-        is_read:
-          type: boolean
-        read_at:
-          type: string
-          format: date-time
         created_at:
           type: string
           format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        link:
-          type: string
     PaymentTransaction:
       type: object
       properties:
         id:
           type: integer
-        user_id:
-          type: integer
-        transaction_id:
-          type: string
         amount:
           type: number
           format: float
-        currency:
-          type: string
-        payment_gateway:
-          type: string
         status:
           type: string
         created_at:
-          type: string
-          format: date-time
-        updated_at:
           type: string
           format: date-time
     Invite:
@@ -383,18 +453,11 @@ components:
       properties:
         id:
           type: integer
-        inviter_id:
-          type: integer
-        invitee_email:
-          type: string
-        invite_code:
+        email:
           type: string
         status:
           type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
+        sent_at:
           type: string
           format: date-time
     ActivityLog:
@@ -402,13 +465,8 @@ components:
       properties:
         id:
           type: integer
-        user_id:
-          type: integer
-        action:
+        activity:
           type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
+        timestamp:
           type: string
           format: date-time
